@@ -1,0 +1,58 @@
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: ai-learning-php83
+    dns:
+      - 61.177.7.1
+      - 223.5.5.5
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      # Host Nginx -> PHP-FPM
+      # Your old PHP 7.4 Docker used 9001, so PHP 8.3 uses 9002.
+      - "9002:9000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-learning
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ai-learning-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-ai_learning}
+      POSTGRES_USER: ${DB_USERNAME:-ai}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ai_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ai-learning
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-learning-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-learning
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  ai-learning:
+    driver: bridge
