@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Day 6 SSE</title>
+</head>
+<body>
+
+<h1>Day 6 - AI Streaming</h1>
+
+<pre id="output"></pre>
+
+<script>
+    const output = document.getElementById('output');
+
+    const eventSource = new EventSource(
+        '/day6_sse.php'
+    );
+
+    eventSource.onmessage = function (event) {
+        output.textContent += event.data;
+    };
+
+    eventSource.onerror = function () {
+        eventSource.close();
+    };
+</script>
+
+</body>
+</html>

@@ -12,7 +12,7 @@ class AiClient
     {
         $this->apiKey = getenv('DEEPSEEK_API_KEY');
         $this->baseUrl = getenv('DEEPSEEK_BASE_URL') ?: 'https://api.deepseek.com';
-        $this->model = getenv('DEEPSEEK_MODEL') ?: 'deepseek-v4-flash';
+        $this->model = getenv('DEEPSEEK_MODEL') ?: 'deepseek-flash';
         if (!$this->apiKey) {
             throw new \RuntimeException("DEEPSEEK_API_KEY 未配置");
         }
